@@ -23,3 +23,13 @@ else
 fi
 
 echo "Selected: $source"
+
+timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
+
+name=$(basename "$source")
+
+backup_name="${name}_${timestamp}.tar"
+
+tar -cf "$backup_name" "$source"
+
+echo "Backup created: $backup_name"
