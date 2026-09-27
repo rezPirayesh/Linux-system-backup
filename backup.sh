@@ -28,7 +28,11 @@ timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
 
 name=$(basename "$source")
 
-backup_name="${name}_${timestamp}.tar"
+backup_dir="backups"
+
+mkdir -p "$backup_dir"
+
+backup_name="$backup_dir/${name}_${timestamp}.tar"
 
 tar -cf "$backup_name" "$source"
 
