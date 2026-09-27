@@ -18,8 +18,22 @@ else
         echo "$((i + 1))) ${matches[$i]}"
     done
 
-    read -r -p "Choose a number: " choice
-    source="${matches[$((choice - 1))]}"
+    while true; do
+        read -r -p "Choose a number: " choice
+
+        if [[ ! "$choice" =~ ^[0-9]+$ ]]; then
+            echo "Invalid input. Please enter a number."
+            continue
+        fi
+
+        if [ "$choice" -lt 1 ] || [ "$choice" -gt "${#matches[@]}" ]; then
+            echo "Invalid choice. Please choose a number from 1 to ${#matches[@]}."
+            continue
+        fi
+
+        source="${matches[$((choice - 1))]}"
+        break
+    done
 fi
 
 echo "Selected: $source"
@@ -30,10 +44,16 @@ name=$(basename "$source")
 
 backup_dir="backups"
 
-mkdir -p "$backup_dir"
+if ! mkdir -p "$backup_dir"; then
+    echo "Error: Could not create backup directory."
+    exit 1
+fi
 
 backup_name="$backup_dir/${name}_${timestamp}.tar"
 
-tar -cf "$backup_name" "$source"
-
-echo "Backup created: $backup_name"
+if tar -cf "$backup_name" "$source"; then
+    echo "Backup created: $backup_name"
+else
+    echo "Error: Backup failed."
+    exit 1
+fi
