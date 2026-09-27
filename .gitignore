@@ -1,0 +1,8 @@
+# Backup files
+*.tar
+
+# Backup directory
+backups/
+
+# Local test data
+test-data/
